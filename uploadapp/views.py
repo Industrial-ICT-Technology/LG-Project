@@ -143,7 +143,7 @@ def upload_main(request):
                     # csv 형식으로 저장
                     upload_file = request.FILES['upload_file']
                     if not upload_file.name.endswith('csv'):
-                        request.session['message'] = '<<Error>> 엑셀 형식으로 업로드 해주세요'
+                        request.session['message'] = '<<Error>> CSV형식으로 업로드 해주세요'
                         request.session.set_expiry(3)
                         return HttpResponseRedirect(reverse('uploadapp:upload'))
 
