@@ -15,6 +15,8 @@ def print_review(start, end, category_product):
     return print_review_list
 
 
+
+
 def labeling_work(request):
     try:
 
@@ -27,8 +29,11 @@ def labeling_work(request):
                 # 청소기, 냉장고, 식기세척기 제품군 선택 시에만 수행
                 if request.GET['category_product'] in ['cleaner', 'refrigerator', 'dish_washer']:
                     category_product = request.GET['category_product']
-                    start = request.GET['start']
-                    end = request.GET['end']
+                    request.session['start'] = request.GET['start']
+                    request.session['end'] = request.GET['end']
+                    start = request.session['start']
+                    end = request.session['end']
+
 
                     # 해당 제품군의 카테고리 정보 불러옴
                     category_detail = Category.objects.filter(category_product=category_product)
@@ -38,33 +43,45 @@ def labeling_work(request):
 
                     context = {'category_detail': category_detail, 'category_product': category_product,
                                'review_first': review_first}
+
                     return render(request, 'labelingapp/labeling_work.html', context)
+
+
 
             else:
                 context = {'message': '제품, 범위를 다시 선택해주세요.'}
                 return render(request, 'labelingapp/labeling_work.html', context)
 
-        if request.method == "POST" and 'labeled_emotion' in request.POST: #긍,부정 라벨링 POST가 들어올때 동작
+        elif request.method == "POST" and 'labeled_emotion' in request.POST: #긍,부정 라벨링 POST가 들어올때 동작
+
+            #들어온 값 변수에 저장
+            target = request.POST.get('labeled_target')
+            emotion = request.POST.get('labeled_emotion')
+            expression = request.POST.get('labeled_expression')
+            print(target, emotion, expression)
 
             # First_Labeled_Data모델을 불러와서 first_labeled_data에 저장
             first_labeled_data=FirstLabeledData()
-            Review.objects.get(pk=request.review_id), #리뷰 모델에서 외래키로 참조하려 했으나 문법이 잘못된듯 오류남(수정필요)
-
+            review_detail = request.POST.get('review_number') #리뷰 모델에서 외래키로 참조하려 했으나 문법이 잘못된듯 오류남(수정필요)
+            print(review_detail)
             # laveling_work에서 불러온 값들을 first_labeled_data 안에 정해진 db이름으로 넣음
-            first_labeled_data.first_labeled_emotion = request.POST.get('labeled_emotion','') #긍,부정 저장
-            first_labeled_data.first_labeled_target = request.POST.get('labeled_target','') # 대상 저장
-            first_labeled_data.first_labeled_expression = request.POST.get('labeled_expression','') #현상 저장
+            first_labeled_data.first_labeled_emotion = emotion #긍,부정 저장
+            first_labeled_data.first_labeled_target = target # 대상 저장
+            first_labeled_data.first_labeled_expression = expression #현상 저장
 
-            Review.objects.get(pk=request.category_id), # 해당하는 리뷰에 맞는 카테고리와 리뷰 id를 받아오는 법 찾아야할듯(같은수정필요)
-            # 지금까지 받아온 값 first_labeled_data(First_Labeled_Data DB)에 저장
+
+            category_ID = request.POST.get('category_id') # 해당하는 리뷰에 맞는 카테고리와 리뷰 id를 받아오는 법 찾아야할듯(같은수정필요)
+            # 지금까지 받아온 값 firstlabeleddata(First_Labeled_Data DB)에 저장
+            print(category_ID)
             first_labeled_data.save()
 
             #상태(True,False) 업데이트해서 Review DB에 다시 저장 (수정필요,업데이트 방법 찾아야함)
-            obj2 = Review.objects.filter(review_id=review_id).update(first_status=True,
-                                                                     labeled_user_id=request.user)
+            # obj2 = Review.objects.filter(pk='review_id').update(first_status=True,
+            #                                                          labeled_user_id=request.user)
+            obj2 = review_detail.review_id
+            obj2.first_status = True
             obj2.save()
 
-            return #다음 리뷰 불러오기?
 
 
 
@@ -73,6 +90,10 @@ def labeling_work(request):
 
 
 
+
+
+        else:
+            return HttpResponse("아무것도 해당안됨")
 
 
 

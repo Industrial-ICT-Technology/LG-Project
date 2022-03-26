@@ -20,7 +20,7 @@
         </div>
     </div>
     <div>
-        <form action="{% url "labelingapp:work" %}" method="get">
+        <form action="{% url 'labelingapp:work' %}" method="get">
         {% csrf_token %}
         <!-- 제품 및 데이터 번호 선택 필드 -->
         <div style="text-align:left; background-color: white; width: 70rem; height: 3rem; display: inline-block; margin-top: 0rem">
@@ -65,17 +65,16 @@
             {% elif category_product == "dish_washer"%}
                 <strong>카테고리 : 식기세척기</strong>
             {% else %}
-
+                카테고리를 선택하세요
             {% endif %}
         </div>
-
 
 
         </div>
         </form>
 
 
-        <!--{{ category_product }}-->
+        <!--{{ request.session.category_product }}-->
 
         <!-- Category,sentiment -->
         <div style="text-align: left; background-color: #eeeeee; border-radius: 1rem; width: 70rem; height: 11rem; display: inline-block; margin-left: 0rem; padding-left: 0.5rem">
@@ -107,38 +106,45 @@
                 {% for review_first in review_first %}
                     {{ review_first.review_number }}.
                     {{ review_first.review_content }}
-                    <div style="display: inline-block;">
+                <div style="display: inline-block;">
                 <form action="" method="post">
                     {% csrf_token %}
                     <div>
-                        <input type="text" name="labeled_target" placeholder="대상">
+                        <select name='category_middle' style="display: inline-block; width: 8rem; height: 1.9rem;
+                            font-family: 'Nanum Gothic Coding', monospace; font-weight: 200; margin-left: 0.3rem;">
+                            {% for category_detail in category_detail %}
+                            <option value='{{ category_detail.category_middle }}'>
+                                {{ category_detail.category_middle }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" name="labeled_target" placeholder="키워드">
                         <input type="text" name="labeled_emotion" placeholder="감정">
                         <input type="text" name="labeled_expression" placeholder="현상">
                         {% comment %}<input type="hidden" name="category_id" value="30">{% endcomment %}
-                        <input type="hidden" name="review_id" value="{{ review_first.review_id }}">
-                        <input type="reset">
-                        <input type="submit" value="next">
+                        <input type="hidden" name="review_number" value="{{ review_first.review_number }}">
+                        <input type="submit" value="적용">
+                        <input type="button" name='next' value="next">
+
+
+
                     </div>
                 </form>
+                </div>
+                {% endfor %}
             </div>
         </div>
-                {% endfor %}
-
-            </div>
-
 
         <!-- delete 버튼 및 reset 버튼 -->
         <div style="background-color: white ;width: 35rem; height: 5rem; display: inline-block; margin-top: .5rem; text-align: left;">
-                <form action="" method="post">
+                <form action="{% url 'labelingapp:work' %}" method="get">
                     {% csrf_token %}
                     <div style="font-family: 'Nanum Gothic Coding', monospace; font-weight: 200;">
-                        <input type="hidden" value="delete" name="delete">
                         <input type="submit" value="delete">
                     </div>
                 </form>
         </div>
         <div style="background-color: white ;width: 35rem; height: 5rem; display: inline-block; margin-top: .5rem; text-align: right;">
-                <form action="" method="post">
+                <form action="{% url 'labelingapp:work' %}" method="get">
                     {% csrf_token %}
                     <div style="font-family: 'Nanum Gothic Coding', monospace; font-weight: 200;">
                         <input type="submit" value="reset">
@@ -148,5 +154,6 @@
 
         </div>
     </div>
+
 
 {% endblock %}

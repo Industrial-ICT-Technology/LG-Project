@@ -38,6 +38,7 @@ class FirstLabeledData(models.Model):
     first_labeled_emotion = models.CharField(max_length=256)
     first_labeled_target = models.CharField(max_length=256)
     first_labeled_expression = models.CharField(max_length=256)
+    category_product = models.CharField(max_length=256)
     category_id = models.ForeignKey("Category", on_delete=models.CASCADE)
     review_id = models.ForeignKey("Review", on_delete=models.CASCADE)
 
@@ -51,6 +52,7 @@ class SecondLabeledData(models.Model):
     second_labeled_emotion = models.CharField(max_length=256)
     second_labeled_target = models.CharField(max_length=256)
     second_labeled_expression = models.CharField(max_length=256)
+    category_product = models.CharField(max_length=256)
     category_id = models.ForeignKey("Category", on_delete=models.CASCADE)
     review_id = models.ForeignKey("Review", on_delete=models.CASCADE)
 
