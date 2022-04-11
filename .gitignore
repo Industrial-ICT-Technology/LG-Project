@@ -96,3 +96,6 @@ media/__pycache__/
 outputapp/__pycache__/
 templates/__pycache__/
 uploadapp/__pycache__/
+
+.idea
+.idea/
