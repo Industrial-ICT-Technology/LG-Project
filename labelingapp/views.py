@@ -107,15 +107,20 @@ def labeling_inspect(request):
                 start = request.GET['start']
                 end = request.GET['end']
 
+
                 # 해당 제품군의 카테고리 정보 불러옴
                 category_detail = Category.objects.filter(category_product=category_product)
+                # 일단 모든 FirstLabeldData를 불러옴 추후 해당 리뷰에 맞는 리뷰만 불러오게끔 수정 필요
+                review_detail = FirstLabeledData.objects.all()
+
+
 
                 # 해당 제품군과 범위 중 제일 처음 한 개만 가져옴 => print_inspect() 함수 사용
                 review_first = print_inspect(start, end, category_product)
 
                 # labeling_inspect.html에 보낼 context 데이터
                 context = {'category_detail': category_detail, 'category_product': category_product,
-                           'review_first': review_first, 'start': start, 'end': end}
+                           'review_first': review_first, 'start': start, 'end': end, 'review_detail':review_detail}
 
                 # POST 방식 request 받았을 때 수행함.
                 if request.method == "POST" and 'labeled_expression' in request.POST and 'labeled_target' in request.POST:

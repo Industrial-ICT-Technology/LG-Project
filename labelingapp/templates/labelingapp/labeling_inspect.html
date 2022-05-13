@@ -87,7 +87,8 @@
                         <div style="background-color: {{ category_detail.category_color }}; padding:.2rem.3rem.2rem.3rem;
                         display: inline-block; opacity: 1;
                                 margin-bottom:.5rem">
-                            {{ category_detail.category_middle }}</div>
+                            {{ category_detail.category_middle }}
+                        </div>
                     {% endfor %}
                 {% endif %}
             </div>
@@ -132,9 +133,25 @@
                         <input type="hidden" name="review_id" value="{{ review_first.review_id }}">
                         <input class="btn btn-outline-success btn-sm" type="submit" value="저장" onClick="window.location.reload()" style="font-family: 'Nanum Gothic Coding', monospace; font-weight: 300; font-size: 1rem">
                     </div>
+                    <div style="height: 4.5rem">
+                        {% if review_detail %}
+                            {% for review_detail in review_detail %}
+                                <div style="background-color: {{ category_detail.category_color }}; padding:.2rem.3rem.2rem.3rem;
+                                display: inline-block; opacity: 1;
+                                        margin-bottom:.5rem">
+                                    <h4>{{ review_detail.category_id}} |
+                                    {{ review_detail.first_labeled_target}} |
+                                    {{ review_detail.first_labeled_expression}} |
+                                    {{ review_detail.first_labeled_emotion}} |
+                                    {{ review_detail.review_id}}</h4>
+
+
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </form>
                 </p>
-
         </div>
 
 
