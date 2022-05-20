@@ -128,8 +128,20 @@
                 </div>
 <!--                실제 쌍-->
                 <div class="date_space">
-                    <div class="date_space_cut" style="width:45.5%;">키워드자리</div>
-                    <div class="date_space_cut" style="width:45.5%;">현상자리</div>
+                    <div class="date_space_cut" style="width: 28%;">
+                        {% if review_detail %}
+                        {% for review_detail in review_detail %}
+                        <p>{{ review_detail.first_labeled_target }}</p>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="date_space_cut" style="width: 28%;">
+                        {% if review_detail %}
+                        {% for review_detail in review_detail %}
+                        <p>{{ review_detail.first_labeled_expression }}</p>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -147,8 +159,21 @@
                 </div>
 <!--                실제 리뷰-->
                 <div class="date_space">
-                    <div class="date_space_cut" style="width:12%;">번호</div>
-                    <div class="date_space_cut" style="width:80%;">원데이터</div>
+                    <div class="date_space_cut" style="width: 28%;">
+                        {% if data_detail %}
+                        {% for data_detail in data_detail %}
+                        <p>{{ data_detail.review_number }}</p>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="date_space_cut" style="width: 28%;">
+                        {% if data_detail %}
+                        {% for data_detail in data_detail %}
+                        <p>{{ data_detail.review_content }}</p>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

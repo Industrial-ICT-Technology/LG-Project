@@ -8,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView
 
 from mainapp.forms import ProfileCreationForm
-from mainapp.models import Profile, Category
+from mainapp.models import Profile, Category, FirstLabeledData, Review
 
 
 class AccountCreateView(CreateView):
@@ -60,8 +60,12 @@ def workstatus(request):
                 category_product = request.GET['category_product']
                 # 해당 제품군의 카테고리 정보 불러옴
                 category_detail = Category.objects.filter(category_product=category_product)
+                # 일단 모든 FirstLabeldData를 불러옴 추후 해당 리뷰에 맞는 리뷰만 불러오게끔 수정 필요
+                review_detail = FirstLabeledData.objects.all()
+                data_detail = Review.objects.all()
+
                 # workstatus.html에 보낼 context 데이터
-                context = {'category_detail': category_detail}
+                context = {'category_detail': category_detail, 'review_detail':review_detail, 'data_detail':data_detail}
                 return render(request, 'mainapp/workstatus.html', context)
             return render(request, 'mainapp/workstatuw.html')
 
