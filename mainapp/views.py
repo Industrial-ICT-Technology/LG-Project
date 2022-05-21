@@ -135,7 +135,7 @@ def workstatus(request):
 
                 context = {'category_detail_list': category_detail_list, 'positive': positive, 'negative': negative,
                            'neutral': neutral, 'everything': everything, 'target' : target,'expression':expression,
-                           'review_num':review_num,'review_data':review_data }
+                           'review_num':review_num,'review_data':review_data}
 
                 return render(request, 'mainapp/workstatus.html', context)
             return render(request, 'mainapp/workstatus.html')
