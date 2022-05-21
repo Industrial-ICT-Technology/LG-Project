@@ -8,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView
 
 from mainapp.forms import ProfileCreationForm
-from mainapp.models import Profile, Category, FirstLabeledData, Review
+from mainapp.models import Profile, Category, Review, FirstLabeledData
 
 
 class AccountCreateView(CreateView):
@@ -49,25 +49,97 @@ class ProfileCreateView(CreateView):
         temp_profile.save()
         return super().form_valid(form)
 
-def workstatus(request):
 
+# sort를 기준으로 정렬해주는 함수(삽입정렬)
+def sorting(sort, category_detail_list, positive, negative, neutral, everything):
+    standard = []
+    if sort == "positive":
+        standard = positive
+    elif sort == "negative":
+        standard = negative
+    elif sort == "neutral":
+        standard = neutral
+    elif sort == "everything":
+        standard = everything
+
+    # 오름차순 정렬
+    for i in range(1, len(standard)):
+        for j in range(i, 0, -1):
+            if standard[j - 1].count() < standard[j].count():
+                category_detail_list[j - 1], category_detail_list[j] = category_detail_list[j], category_detail_list[
+                    j - 1]
+                positive[j - 1], positive[j] = positive[j], positive[j - 1]
+                negative[j - 1], negative[j] = negative[j], negative[j - 1]
+                neutral[j - 1], neutral[j] = neutral[j], neutral[j - 1]
+                everything[j - 1], everything[j] = everything[j], everything[j - 1]
+
+
+def workstatus(request):
     try:
 
         # reqeust한 URL의 파라미터에 제품군, 시작위치, 끝 위치가 있으면 데이터를 반환함
         if 'category_product' in request.GET:
             # 청소기, 냉장고, 식기세척기 제품군 선택 시에만 수행
             if request.GET['category_product'] in ['cleaner', 'refrigerator', 'dish_washer']:
-                category_product = request.GET['category_product']
-                # 해당 제품군의 카테고리 정보 불러옴
-                category_detail = Category.objects.filter(category_product=category_product)
-                # 일단 모든 FirstLabeldData를 불러옴 추후 해당 리뷰에 맞는 리뷰만 불러오게끔 수정 필요
-                review_detail = FirstLabeledData.objects.all()
-                data_detail = Review.objects.all()
 
-                # workstatus.html에 보낼 context 데이터
-                context = {'category_detail': category_detail, 'review_detail':review_detail, 'data_detail':data_detail}
+                # 해당 제품군의 카테고리 정보 불러옴
+                category_product = request.GET['category_product']
+                category_detail = Category.objects.filter(category_product=category_product)
+                review_detail = Review.objects.filter(category_product=category_product)
+
+
+                '''카테고리별 긍정 부정 개수'''
+                category_detail_list = []
+                positive = []
+                negative = []
+                neutral = []
+                everything = []
+                target = []
+                expression = []
+                review_num = []
+                review_data = []
+
+                # 카테고리별 라벨링된 데이터 개수 불러옴(개수 아니기 때문에 바로 쓰시면 됩니다.)
+                for category in category_detail:
+                    positive_temp = FirstLabeledData.objects.filter(category_id=category,
+                                                                    first_labeled_emotion='positive')
+                    negative_temp = FirstLabeledData.objects.filter(category_id=category,
+                                                                    first_labeled_emotion='negative')
+                    neutral_temp = FirstLabeledData.objects.filter(category_id=category,
+                                                                   first_labeled_emotion='neutral')
+                    everything_temp = FirstLabeledData.objects.filter(category_id=category)
+
+
+                    category_detail_list.append(category.category_middle)
+                    positive.append(positive_temp)
+                    negative.append(negative_temp)
+                    neutral.append(neutral_temp)
+                    everything.append(everything_temp)
+
+                    for i in everything_temp:
+                        target.append(i.first_labeled_target)
+
+                    for k in everything_temp:
+                        expression.append(k.first_labeled_expression)
+
+                for y in review_detail:
+                    review_num.append(y.review_number)
+                for z in review_detail:
+                    review_data.append(z.review_content)
+
+
+                # sort 요청 들어오면 수행
+                if request.method == "POST" and 'sort' in request.POST:
+                    sort = request.POST.get('sort')
+                    sorting(sort, category_detail_list, positive, negative, neutral, everything)
+
+                context = {'category_detail_list': category_detail_list, 'positive': positive, 'negative': negative,
+                           'neutral': neutral, 'everything': everything, 'target' : target,'expression':expression,
+                           'review_num':review_num,'review_data':review_data }
+
                 return render(request, 'mainapp/workstatus.html', context)
-            return render(request, 'mainapp/workstatuw.html')
+            return render(request, 'mainapp/workstatus.html')
+
 
         else:
             context = {'message': '제품을 다시 선택해주세요.'}
