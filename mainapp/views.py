@@ -85,7 +85,7 @@ def workstatus(request):
                 # 해당 제품군의 카테고리 정보 불러옴
                 category_product = request.GET['category_product']
                 category_detail = Category.objects.filter(category_product=category_product)
-                review_detail = Review.objects.filter(category_product=category_product)
+                review_detail = Review.objects.filter(category_product=category_product,first_status=True)
 
 
                 '''카테고리별 긍정 부정 개수'''
@@ -110,6 +110,7 @@ def workstatus(request):
 
 
 
+
                     category_detail_list.append(category.category_middle)
                     positive.append(positive_temp)
                     negative.append(negative_temp)
@@ -118,7 +119,7 @@ def workstatus(request):
 
 
 
-
+                    # 키워드와 현상 묶음으로 보여주기 위해 2차원배열로 구성
                     for i in everything_temp:
                         arr=[]
                         arr.append(i.first_labeled_target)
@@ -126,7 +127,7 @@ def workstatus(request):
                         target_expression.append(arr)
 
 
-
+                # 리뷰 번호와 데이터를 함께 쌍으로 묶어서 보여주기위해 2차원 배열로 구성
                 for y in review_detail:
                     arr2 = []
                     arr2.append(y.review_number)

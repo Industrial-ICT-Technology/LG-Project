@@ -48,6 +48,15 @@
         vertical-align: top;
         font-family: 'Nanum Gothic Coding', monospace;
     }
+    .date_space2{
+        overflow-y: scroll;
+        height: 33.5rem;
+        text-align: left;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+        vertical-align: top;
+        font-family: 'Nanum Gothic Coding', monospace;
+    }
     /*속성마다 데이터의 구역을 구분*/
     .date_space_cut{
         display: inline-block;
@@ -189,14 +198,18 @@ document.getElementById(form_name).submit();
             <div style="height: 37rem; border: 1px solid black">
 <!--                표 속성-->
                 <div class="bot_line">
-                    <div class="data_label" style="width: 45.5%">키워드</div>
-                    <div class="data_label" style="width: 45.5%">현상</div>
+                    <div class="data_label" style="width: 35%">키워드</div>
+                    <div class="data_label" style="width: 35%">현상</div>
                 </div>
 <!--                실제 쌍-->
                 <div class="date_space">
                     <div class="date_space_cut" style="width: 100%;">
-                        {% for target_expression in target_expression %}
-                            <p>{{ target_expression }}</p>
+                        {% for x,y in target_expression %}
+                            <p>
+                                <span>{{ x }}</span>
+                                <span> | </span>
+                                <span>{{ y }}</span>
+                            </p>
                         {% endfor %}
                     </div>
 
@@ -212,14 +225,17 @@ document.getElementById(form_name).submit();
             <div style="height: 37rem; border: 1px solid black">
 <!--                표속성-->
                 <div class="bot_line">
-                    <div class="data_label" style="width: 12%">번호</div>
+                    <div class="data_label" style="width: 12%">리뷰번호</div>
                     <div class="data_label" style="width: 80%">원데이터</div>
                 </div>
 <!--                실제 리뷰-->
-                <div class="date_space">
-                    <div class="date_space_cut" style="width: 80%;">
-                        {% for review_num_data in review_num_data %}
-                            <p>{{ review_num_data }}</p>
+                <div class="date_space2">
+                    <div class="date_space_cut" style="width: 90%; margin-left: 1.5rem">
+                        {% for x,y in review_num_data %}
+                            <p>
+                                <span>{{ x }}</span>
+                                <span>{{ y }}</span>
+                            </p>
                         {% endfor %}
                     </div>
                 </div>
