@@ -94,10 +94,9 @@ def workstatus(request):
                 negative = []
                 neutral = []
                 everything = []
-                target = []
-                expression = []
-                review_num = []
-                review_data = []
+                target_expression = []
+                review_num_data = []
+
 
                 # 카테고리별 라벨링된 데이터 개수 불러옴(개수 아니기 때문에 바로 쓰시면 됩니다.)
                 for category in category_detail:
@@ -110,22 +109,30 @@ def workstatus(request):
                     everything_temp = FirstLabeledData.objects.filter(category_id=category)
 
 
+
                     category_detail_list.append(category.category_middle)
                     positive.append(positive_temp)
                     negative.append(negative_temp)
                     neutral.append(neutral_temp)
                     everything.append(everything_temp)
 
-                    for i in everything_temp:
-                        target.append(i.first_labeled_target)
 
-                    for k in everything_temp:
-                        expression.append(k.first_labeled_expression)
+
+
+                    for i in everything_temp:
+                        arr=[]
+                        arr.append(i.first_labeled_target)
+                        arr.append(i.first_labeled_expression)
+                        target_expression.append(arr)
+
+
 
                 for y in review_detail:
-                    review_num.append(y.review_number)
-                for z in review_detail:
-                    review_data.append(z.review_content)
+                    arr2 = []
+                    arr2.append(y.review_number)
+                    arr2.append(y.review_content)
+                    review_num_data.append(arr2)
+
 
 
                 # sort 요청 들어오면 수행
@@ -134,8 +141,8 @@ def workstatus(request):
                     sorting(sort, category_detail_list, positive, negative, neutral, everything)
 
                 context = {'category_detail_list': category_detail_list, 'positive': positive, 'negative': negative,
-                           'neutral': neutral, 'everything': everything, 'target' : target,'expression':expression,
-                           'review_num':review_num,'review_data':review_data}
+                           'neutral': neutral, 'everything': everything, 'target_expression' : target_expression,
+                           'review_num_data':review_num_data}
 
                 return render(request, 'mainapp/workstatus.html', context)
             return render(request, 'mainapp/workstatus.html')

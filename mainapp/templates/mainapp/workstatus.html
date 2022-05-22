@@ -91,7 +91,13 @@ document.getElementById(form_name).submit();
 
 <!--            오른쪽상단:총개수현황-->
             <div style="display:inline-block;height: 3.5rem; width: auto; float: right;padding: 1rem">
-                <div class="right_top">총 개수</div>
+                <div class="right_top">
+                    <p>총 개수</p>
+                    {% for review_num in review_num %}
+                        <p>{{ review_num.count }}</p>
+                    {% endfor %}
+                </div>
+
                 <div class="right_top">작업완료</div>
                 <div class="right_top">검수완료</div>
                 <div class="right_top">삭제</div>
@@ -188,16 +194,12 @@ document.getElementById(form_name).submit();
                 </div>
 <!--                실제 쌍-->
                 <div class="date_space">
-                    <div class="date_space_cut" style="width: 45.5%;">
-                        {% for target in target %}
-                            <p>{{ target }}</p>
+                    <div class="date_space_cut" style="width: 100%;">
+                        {% for target_expression in target_expression %}
+                            <p>{{ target_expression }}</p>
                         {% endfor %}
                     </div>
-                    <div class="date_space_cut" style="width:45.5%;">
-                        {% for expression in expression %}
-                            <p>{{ expression }}</p>
-                        {% endfor %}
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -215,14 +217,9 @@ document.getElementById(form_name).submit();
                 </div>
 <!--                실제 리뷰-->
                 <div class="date_space">
-                    <div class="date_space_cut" style="width: 10%;">
-                        {% for review_num in review_num %}
-                            <p>{{ review_num }}</p>
-                        {% endfor %}
-                    </div>
-                    <div class="date_space_cut" style="width:45.5%;">
-                        {% for review_data in review_data %}
-                            <p>{{ review_data }}</p>
+                    <div class="date_space_cut" style="width: 80%;">
+                        {% for review_num_data in review_num_data %}
+                            <p>{{ review_num_data }}</p>
                         {% endfor %}
                     </div>
                 </div>
