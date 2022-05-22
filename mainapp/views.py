@@ -86,6 +86,10 @@ def workstatus(request):
                 category_product = request.GET['category_product']
                 category_detail = Category.objects.filter(category_product=category_product)
                 review_detail = Review.objects.filter(category_product=category_product,first_status=True)
+                alltotal = Review.objects.filter(category_product=category_product).count()
+                first_num = Review.objects.filter(category_product=category_product).filter(first_status=True).count()
+                second_num = Review.objects.filter(category_product=category_product).filter(second_status=True).count()
+                dummy_num = Review.objects.filter(category_product=category_product).filter(dummy_status=True).count()
 
 
                 '''카테고리별 긍정 부정 개수'''
@@ -143,7 +147,8 @@ def workstatus(request):
 
                 context = {'category_detail_list': category_detail_list, 'positive': positive, 'negative': negative,
                            'neutral': neutral, 'everything': everything, 'target_expression' : target_expression,
-                           'review_num_data':review_num_data}
+                           'review_num_data':review_num_data, 'alltotal': alltotal, 'first_num': first_num,
+                           'dummy_num': dummy_num, 'second_num': second_num}
 
                 return render(request, 'mainapp/workstatus.html', context)
             return render(request, 'mainapp/workstatus.html')
