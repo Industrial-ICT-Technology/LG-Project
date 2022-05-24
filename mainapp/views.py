@@ -49,6 +49,15 @@ class ProfileCreateView(CreateView):
         temp_profile.save()
         return super().form_valid(form)
 
+def count_sohw(count, target_expression, review_num_data,positive):
+    standard = []
+    if count == "positive":
+        standard = positive
+
+        for i in range(1,len(standard)):
+            target_expression
+
+
 
 # sort를 기준으로 정렬해주는 함수(삽입정렬)
 def sorting(sort, category_detail_list, positive, negative, neutral, everything):
@@ -138,7 +147,10 @@ def workstatus(request):
                     arr2.append(y.review_content)
                     review_num_data.append(arr2)
 
-
+                # count 요청 들어오면 수행
+                if request.method == "POST" and 'count' in request.POST:
+                    count = request.POST.get('count')
+                    count_sohw(count, target_expression, review_num_data, positive)
 
                 # sort 요청 들어오면 수행
                 if request.method == "POST" and 'sort' in request.POST:

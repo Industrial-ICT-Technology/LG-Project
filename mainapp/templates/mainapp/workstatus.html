@@ -151,9 +151,17 @@ document.getElementById(form_name).submit();
                     </div>
                     <!-- 긍정 개수 -->
                     <div class="date_space_cut" style="width: 15%;">
+                    <form method="post" class="sort" id="count_positive">
+                        {% csrf_token %}
+                        <input type="hidden" name="count" value="count_positive">
                         {% for number in positive %}
-                            <p>{{ number.count }}</p>
+                            <a href="#" onclick="return chk_form('count_positive')">
+                            <p>{{ number.count }}</p></a>
                         {% endfor %}
+                    </form>
+
+
+
                     </div>
 
                     <!-- 부정 개수 -->
@@ -175,6 +183,7 @@ document.getElementById(form_name).submit();
                         {% for number in everything %}
                             <p>{{ number.count }}</p>
                         {% endfor %}
+                    </a>
                     </div>
                 </div>
             </div>
